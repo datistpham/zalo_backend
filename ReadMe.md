@@ -1,0 +1,44 @@
+* Run source
+  - npm start
+* API
+  - /api/auth 
+      - /register -POST
+      - /login -POST
+      - /refresh_token -POST
+      - /logout -POST
+      - /reset-password -POST
+      - /send-sms -POST
+      - /check-numberphone -POST
+  - /api/users (cần accessToken từ login) 
+      - /change-password/:id -POST
+      - /admin/isActiveUser/:id -POST
+      - / -GET(GET ALL)
+      - /:id - GET(GET ONE)
+      - /phone/:phoneNumber -GET(GET ONE BY PHONE NUMBER)
+      - /get-list-user-send-request-add-friend-of-me/:id -GET(GET LIST USER SEND REQUEST ADD FRINED BY ME)
+      - /request-add-friend/:id -POST(SEND REQUEST ADD FRIEND)
+      - /accept-add-friend/:id -POST(ACCEPT REQUEST ADD FRIEND)
+      - /cancel-add-friend/:id -POST(Cancel REQUEST ADD FRIEND (thằng gửi nó hủy yêu cầu))
+      - /denied-add-friend/:id -POST(Denied REQUEST ADD FRIEND (thằng nhận nó hủy yêu cầu))
+      - /suggestions-friend -POST(SUGGESSTION FRIENDS)
+      - /unfriend/:id -POST(UNFRIEND)
+      - /contacts - POST(GET USER BY CONTACTS)
+      - /edit-infor/:id -POST(EDIT INFOR USER PROFILE)
+      - /change-phone/:id -POST(EDIT PHONE USER PROFILE)
+   - /api/messages
+      - / -POST
+      - /:conversationId -GET
+   - /api/conversations
+      - / -POST
+      - /:userId -GET
+      - /friend/:friendId -POST
+      - /updateLastMsg/:conversationId - POST
+      - /get-files/:conversationId -GET
+      - /get-image-and-video/:conversationId -GET
+      - /search/:keyword -POST
+      - /change-label/:id -PUT
+      - /add-member-group/:conversationId -POST
+      - delete-group/:id -POST
+      - /delete-member/:memberId -POST
+      - /out-group/:id -POST
+  - /api/s3Url (Lưu ảnh S3 AWS)
