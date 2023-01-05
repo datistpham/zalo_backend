@@ -60,7 +60,10 @@ const SocketServer = (socket, io) => {
       ...data,
     });
   });
-  //
+  // call signal
+  socket.on("start_call", (data)=> {
+    socket.join(data.call_id)
+  })
   
 };
 
