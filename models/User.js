@@ -20,6 +20,12 @@ const UserSchema = new mongoose.Schema({
             min: 2,
             unique: true,
         },
+        dateOfBirth: {
+            type: String,
+        },
+        address: {
+            type: String
+        },
         password: {
             type: String,
             require: true,
@@ -42,7 +48,10 @@ const UserSchema = new mongoose.Schema({
             type: Boolean,
             default: true,
         },
-        
+        isDeaf: {
+            type: Boolean,
+            default: false
+        },
         friends: [{type: mongoose.Types.ObjectId, ref:'User'}],
         friendsQueue: [{type: mongoose.Types.ObjectId, ref:'User'}],
         isAdmin: {

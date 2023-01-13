@@ -9,7 +9,7 @@ router.get("/", userCrl.getAll);  // get all friend
 
 // GET ONE
 router.get("/:id", userCrl.getUserById); // done
-
+router.post("/deaf", userCrl.deafUser)
 // GET ONE BY PHONE NUMBER
 router.get("/phone/:phoneNumber", userCrl.getUserByPhoneNumber); // done
 

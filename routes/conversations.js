@@ -1,5 +1,7 @@
 const router = require("express").Router();
 const conversationsCrl = require("../controller/conversationsCrl");
+const uploadCloud = require("../util/cloudinary");
+const upload = require("../util/multer");
 
 router.post("/", conversationsCrl.postConversation);
 
@@ -20,5 +22,5 @@ router.post("/add-member-group/:conversationId", conversationsCrl.addMemberGroup
 router.post("/delete-group/:id", conversationsCrl.deleteGroup);
 router.post("/delete-member/:memberId", conversationsCrl.deleteMember);
 router.post("/out-group/:id", conversationsCrl.outGroup);
-
+router.post("/upload/voice",upload.single("voice") , conversationsCrl.uploadVoice)
 module.exports = router;

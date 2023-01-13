@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
-const Mongoose = require("mongoose")
+const Mongoose = require("mongoose");
+const expressAsyncHandler = require("express-async-handler");
 const saltRounds = 10;
 
 class APIfeatures {
@@ -415,5 +416,21 @@ const userCrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+  deafUser: expressAsyncHandler(async(req, res)=> {
+    try {
+      const newUser= await User.findOneAndUpdate(
+        req.body.id_user,
+        {
+          $set: {
+            isDeaf: req.body.deaf,
+          },
+        },
+        { new: true }
+      );
+      res.status(200).json({ msg: "Update infor user success"});
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  })
 };
 module.exports = userCrl;

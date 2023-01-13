@@ -67,15 +67,15 @@ const authCtrl = {
         );
 
       if (!user)
-        return res.status(404).json({ msg: "Không tìm thấy người dùng." });
+        return res.status(200).json({ msg: "Không tìm thấy người dùng." });
       if(user.status ===false)
-        return res.status(404).json({ msg: "Tài khoản đã bị khóa do vi phạm chính sách của chúng tôi." });
+        return res.status(200).json({ msg: "Tài khoản đã bị khóa do vi phạm chính sách của chúng tôi." });
           
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
       );
-      if (!validPassword) return res.status(400).json({ msg: "Mật khẩu sai." });
+      if (!validPassword) return res.status(200).json({ msg: "Mật khẩu sai." });
 
       const { password, ...other } = user._doc;
 
@@ -91,6 +91,7 @@ const authCtrl = {
         });
       }
       res.status(200).json({
+        login: true,
         msg: "Đăng nhập thành công!",
         accessToken,
         refreshToken,

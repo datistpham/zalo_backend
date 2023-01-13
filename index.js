@@ -8,9 +8,9 @@ const cookieParser = require("cookie-parser");
 const SocketServer = require("./SocketServer");
 const { ExpressPeerServer } = require("peer");
 const s3 = require("./util/s3");
-const sendSms = require("./util/sendsms");
-const fs = require("fs");
-const path = require("path");
+// const sendSms = require("./util/sendsms");
+// const fs = require("fs");
+// const path = require("path");
 
 const verifyToken = require("./middleware/auth");
 const authRouter = require("./routes/auth");
@@ -30,8 +30,8 @@ app.use(express.static("public"));
 
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(morgan("common"));
+app.use(express.urlencoded({ extended: true }));
+// app.use(morgan("common"));
 
 // route
 app.use("/api/users", verifyToken, userRouter);

@@ -1,6 +1,9 @@
+const expressAsyncHandler = require("express-async-handler");
 const Mongoose = require("mongoose");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
+const cloudinary = require('cloudinary').v2;
+
 class APIfeatures {
   constructor(query, queryString) {
     this.query = query;
@@ -127,17 +130,19 @@ const conversationsCrl = {
     const media = await Message.aggregate([
       {
         $match: {
-          conversation: Mongoose.Types.ObjectId(req.params.conversationId),
+          conversation: req.params.conversationId,
         },
       },
-      { $match: { media: { $exists: true, $not: { $size: 0 } } } },
-      { $project: { media: "$media" } },
-      { $unwind: "$media" },
       {
         $match: {
-          "media.type": /^application/i,
+          $or: [
+            {"type_message": "image"},
+            {"type_message": "file"},
+          ]
+          
         },
       },
+
     ]);
 
     try {
@@ -321,5 +326,15 @@ const conversationsCrl = {
       return res.status(500).json({ errorMessage: error });
     }
   },
+  uploadVoice: (async (req, res)=> {
+    cloudinary.config({
+      cloud_name: "cockbook",
+      api_key: "362125891568421",
+      api_secret: "kR3bk36ysLWcYuKLy-MN9otXogM",
+      secure: true  
+    });
+    const result= await cloudinary.uploader.upload(`./${req.file.destination}/${req.file.filename}`, {resource_type: "auto"})
+    return res.status(200).json({voice: result.secure_url})
+  })
 };
 module.exports = conversationsCrl;
