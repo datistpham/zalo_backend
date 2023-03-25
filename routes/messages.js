@@ -6,4 +6,5 @@ router.post("/", messagesCrl.postMessage) //
 router.get("/:conversationId",messagesCrl.getMessageByConversationId)
 router.post("/recall/message/:keyId", messagesCrl.recallMessage)
 router.post("/remove/message/:keyId", messagesCrl.removeMessage)
+router.get("/media/image", messagesCrl.getDetailImage)
 module.exports = router

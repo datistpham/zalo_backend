@@ -1,3 +1,5 @@
+const conversationsCrl = require("./controller/conversationsCrl");
+
 let users = [];
 
 const SocketServer = (socket, io) => {
@@ -31,16 +33,20 @@ const SocketServer = (socket, io) => {
     socket.join(`${data.roomId}`);
     socket.emit("connect_room_conversation", { roomId: data.roomId });
   });
+
   socket.on("message_from_client", (data) => {
-    io.to(data.roomId).emit("broadcast_to_all_user_in_room", { ...data });
+    io.in(data.roomId).emit("broadcast_to_all_user_in_room", { ...data });
   });
+  
   socket.on("typing_from_client_on", (data) => {
     socket
+      .broadcast
       .to(data.roomId)
       .emit("broadcast_to_all_user_in_room_typing", { data });
   });
   socket.on("typing_from_client_off", (data) => {
     socket
+      .broadcast
       .to(data.roomId)
       .emit("broadcast_to_all_user_in_room_typing", { data });
   });
@@ -87,6 +93,23 @@ const SocketServer = (socket, io) => {
   // sender or receiver end call
   socket.on("end_call", (data)=> {
     io.to(data.call_id).emit("end_call_from_user", {end_call: true})
+  })
+
+  // send request make friends 
+  socket.on("send_request_friend", (data)=> {
+    io.emit("new_request_friend", {sender_user_id: data.sender_user_id, destination_user_id: data.destination_user_id})
+  })
+
+  // new message notify
+  socket.on("send_new_message", (data)=> {
+    socket.broadcast.emit("send_new_message_from_server", {...data})
+  })
+
+  // newest message 
+  socket.on("update_newest_message", (data)=> {
+    conversationsCrl.updateLastUpdate(data.roomId, data.lastUpdate)
+    io.emit("newest_message", {...data})
+    socket.broadcast.emit("newest_message_sound", {...data})
   })
   
 };

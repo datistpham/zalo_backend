@@ -327,14 +327,18 @@ const conversationsCrl = {
     }
   },
   uploadVoice: (async (req, res)=> {
-    cloudinary.config({
-      cloud_name: "cockbook",
-      api_key: "362125891568421",
-      api_secret: "kR3bk36ysLWcYuKLy-MN9otXogM",
-      secure: true  
-    });
+    // cloudinary.config({
+    //   cloud_name: "cockbook",
+    //   api_key: "362125891568421",
+    //   api_secret: "kR3bk36ysLWcYuKLy-MN9otXogM",
+    //   secure: true  
+    // });
     const result= await cloudinary.uploader.upload(`./${req.file.destination}/${req.file.filename}`, {resource_type: "auto"})
     return res.status(200).json({voice: result.secure_url})
+  }),
+  updateLastUpdate: expressAsyncHandler(async (idConversation, lastUpdate)=> {
+    const result= await Conversation.findOneAndUpdate({id_conversation: idConversation}, {lastUpdate})
+    return result
   })
 };
 module.exports = conversationsCrl;

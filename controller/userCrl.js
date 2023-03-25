@@ -75,6 +75,7 @@ const userCrl = {
       const users = await User.findOne({
         _id: Mongoose.Types.ObjectId(userId),
       })
+
       .populate("friendsQueue", "username profilePicture phoneNumber")
 
       res.status(200).json({
@@ -157,6 +158,7 @@ const userCrl = {
   sendRequestAddFriend: async (req, res) => {
     try {
       const idcuaMinh = req.body.userId;
+      //
       const cuaminh= await User.findById({ _id: req.body.userId})
       const thangNhan = await User.findById({ _id: req.params.id });
       if (thangNhan._doc.friendsQueue.includes(idcuaMinh)) {
@@ -393,7 +395,7 @@ const userCrl = {
   },
   editInfo: async (req, res) => {
     try {
-      const { newUsername, newProfilePicture, newGender } = req.body;
+      const { newUsername, newProfilePicture, newGender, newCoverPhoto } = req.body;
 
       const u = await User.findById(req.params.id);
       console.log(u.profilePicture);
@@ -406,16 +408,18 @@ const userCrl = {
             profilePicture: newProfilePicture
               ? newProfilePicture
               : u.profilePicture,
-            gender: newGender,
+            gender: newGender, 
+            coverPicture: newCoverPhoto
           },
         },
         { new: true }
       );
-      res.status(200).json({ msg: "Update infor user success", user });
+      res.status(200).json({ msg: "Cập nhật thông tin thành công", user, status: 200 });
     } catch (err) {
-      return res.status(500).json({ msg: err.message });
+      return res.status(500).json({ msg: err.message, status: 500 });
     }
   },
+  //
   deafUser: expressAsyncHandler(async(req, res)=> {
     try {
       const newUser= await User.findOneAndUpdate(
@@ -431,6 +435,36 @@ const userCrl = {
     } catch (error) {
       return res.status(500).json({ msg: error.message });
     }
+  }),
+  // 
+  profileUser: expressAsyncHandler(async (req, res)=> {
+    try {
+      const userProfile= await User.findOne({"_id": req.params.id});
+      res.status(200).json(userProfile);
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  }),
+  update_seen_request: expressAsyncHandler(async (req, res)=> {
+    try {
+      // console.log(req.body.un_seen)
+      const userProfile= await User.findOneAndUpdate({"_id": req.params.id}, {seenRequest: req.body.un_seen});
+      res.status(200).json(userProfile);
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
+    }
+  }),
+  statusRequest: expressAsyncHandler(async (req, res)=> {
+      const idcuaMinh = req.query.userId;
+      //
+      // const cuaminh= await User.findById({ _id: req.body.userId})
+      const thangNhan = await User.findById({ _id: req.params.id });
+      if (thangNhan._doc.friendsQueue.includes(idcuaMinh)) {
+        return res.status(200).json({ msg: "Bạn đã gửi yêu cầu kết bạn rồi", request: true, duplicate: true });
+      }
+      else {
+        res.status(200).json({msg: "", request: false, duplicate: false})
+      }
   })
 };
 module.exports = userCrl;

@@ -11,7 +11,7 @@ const verifyToken = (req,res,next) => {
     jwt.verify(token,process.env.TOKEN_SECRET_KEY, (err,user) => {
         if(err) res.status(403).json({
             success: false, 
-            msg: error.message
+            msg: err.message
         })
         req.user = user
         next()

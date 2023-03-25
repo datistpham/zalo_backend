@@ -8,6 +8,11 @@ const ConversationSchema = new mongoose.Schema(
     lastMessage: { type: mongoose.Types.ObjectId, ref: "Message" },
     createdBy: { type: mongoose.Types.ObjectId, ref: "User" },
     imageGroup: !String,
+    lastUpdate: {type: String, default: new Date().toLocaleString("en-US", { timeZone: 'Asia/Ho_Chi_Minh' })},
+    unSeenMessage: {
+      type: Number, 
+      default: 0
+    }
   },
   { timestamps: true }
 );

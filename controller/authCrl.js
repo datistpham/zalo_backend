@@ -20,10 +20,10 @@ const authCtrl = {
       if (user_phoneNumber)
         return res
           .status(400)
-          .json({ msg: "Số điện thoại này đã được đăng ký." });
+          .json({ msg: "Số điện thoại này đã được đăng ký.", status: 400 });
 
       if (password.length < 6)
-        return res.status(400).json({ msg: "Mật khẩu phải lớn hơn 6 ký tự." });
+        return res.status(400).json({ msg: "Mật khẩu phải lớn hơn 6 ký tự.", status: 400 });
 
       const passwordHash = await bcrypt.hash(password, saltRounds);
       const newUser = new User({
@@ -67,15 +67,15 @@ const authCtrl = {
         );
 
       if (!user)
-        return res.status(200).json({ msg: "Không tìm thấy người dùng." });
+        return res.status(200).json({ msg: "Không tìm thấy người dùng.", status: 400 });
       if(user.status ===false)
-        return res.status(200).json({ msg: "Tài khoản đã bị khóa do vi phạm chính sách của chúng tôi." });
+        return res.status(200).json({ msg: "Tài khoản đã bị khóa do vi phạm chính sách của chúng tôi.", status: 400 });
           
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
       );
-      if (!validPassword) return res.status(200).json({ msg: "Mật khẩu sai." });
+      if (!validPassword) return res.status(200).json({ msg: "Mật khẩu sai.", status: 400 });
 
       const { password, ...other } = user._doc;
 
@@ -96,9 +96,10 @@ const authCtrl = {
         accessToken,
         refreshToken,
         user: other,
+        status: 200
       });
     } catch (err) {
-      res.status(500).json({ msg: err.message });
+      res.status(500).json({ msg: err.message, status: 500 });
     }
   },
   // done
@@ -197,24 +198,23 @@ const authCtrl = {
     } catch (err) {
       return res.status(500).json({ msg: err.message });
     }
-  }
- ,
-    confirm_code: async (req, res)=> {
-      const code_verify= req.body.code_verify
-      const email= req.body.email
-      try {
-        const newConfirm= await Confirm.findOneAndRemove({code_verify, email})
-        if(newConfirm ){ 
-          return res.status(200).json({...newConfirm, verify: true})
-        }
-        else {
-          return res.status(200).json({verify: false})
-        }
-      } catch (error) {
-        return res.status(500).json({ msg: error.message });
+  },
+  confirm_code: async (req, res)=> {
+    const code_verify= req.body.code_verify
+    const email= req.body.email
+    try {
+      const newConfirm= await Confirm.findOneAndRemove({code_verify, email})
+      if(newConfirm ){ 
+        return res.status(200).json({...newConfirm, verify: true})
       }
-      
+      else {
+        return res.status(200).json({verify: false})
+      }
+    } catch (error) {
+      return res.status(500).json({ msg: error.message });
     }
+    
+  }
 };
 
 module.exports = authCtrl;

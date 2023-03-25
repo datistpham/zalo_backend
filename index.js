@@ -8,6 +8,13 @@ const cookieParser = require("cookie-parser");
 const SocketServer = require("./SocketServer");
 const { ExpressPeerServer } = require("peer");
 const s3 = require("./util/s3");
+const cloudinary = require('cloudinary').v2;
+cloudinary.config({
+  cloud_name: "cockbook",
+  api_key: "362125891568421",
+  api_secret: "kR3bk36ysLWcYuKLy-MN9otXogM",
+  secure: true  
+});
 // const sendSms = require("./util/sendsms");
 // const fs = require("fs");
 // const path = require("path");
@@ -19,7 +26,7 @@ const conversationRouter = require("./routes/conversations");
 const messageRouter = require("./routes/messages");
 const callRouter= require("./routes/call")
 const router = require("./routes/auth");
-
+const upload= require("./routes/upload")
 const app = express();
 app.use(helmet());
 app.use(cookieParser());
@@ -39,6 +46,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/conversations", conversationRouter);
 app.use("/api/messages", verifyToken, messageRouter);
 app.use("/api/live", verifyToken, callRouter)
+app.use(upload)
 app.use("/user", router)
 app.use("/api/s3Url", async (req, res) => {
   const url = await s3.generateUploadURL();

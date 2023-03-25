@@ -1,3 +1,4 @@
+const expressAsyncHandler = require("express-async-handler");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
 
@@ -67,6 +68,14 @@ const messagesCrl = {
         } catch (error) {
             res.status(500).json({msg: err.message})
         }
-    }
+    },
+    getDetailImage: expressAsyncHandler(async (req, res)=> {
+        try {
+            const image= await Message.findOne({key: req.query.key})
+            return res.status(200).json(image)
+        } catch (error) {
+            res.status(500).json({msg: err.message})
+        }
+    })
 }
 module.exports = messagesCrl

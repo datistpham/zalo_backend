@@ -67,7 +67,16 @@ const UserSchema = new mongoose.Schema({
             default: true,
         },
         lastConversationId: {
-            type: !String
+            type: String,
+            default: ""
+        },
+        seenRequest: {
+            type: Number,
+            default: 0
+        },
+        coverPicture: {
+            type: String,
+            default: ""
         }
     },
     {timestamps: true}
