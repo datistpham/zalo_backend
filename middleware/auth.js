@@ -9,12 +9,16 @@ const verifyToken = (req,res,next) => {
     const token = authHeader.split(" ")[1]
 
     jwt.verify(token,process.env.TOKEN_SECRET_KEY, (err,user) => {
-        if(err) res.status(403).json({
-            success: false, 
-            msg: err.message
-        })
-        req.user = user
-        next()
+        if(err) {
+            return res.status(403).json({
+                success: false, 
+                msg: err.message
+            })
+        }
+        else {
+            req.user = user
+            next()
+        }
     }) 
     
 }

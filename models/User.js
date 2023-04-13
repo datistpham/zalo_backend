@@ -77,6 +77,10 @@ const UserSchema = new mongoose.Schema({
         coverPicture: {
             type: String,
             default: ""
+        },
+        address: {
+            type: String,
+            default: ""
         }
     },
     {timestamps: true}

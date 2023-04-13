@@ -12,7 +12,11 @@ const MessageSchema = new mongoose.Schema(
         type_message: String,
         key: String,
         data: Object,
-        name_file: !String
+        name_file: !String,
+        extend_text: {
+            type: String,
+            default: ""
+        }
             
     },
     { timestamps: true }

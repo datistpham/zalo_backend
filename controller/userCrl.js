@@ -127,7 +127,7 @@ const userCrl = {
       const { password, updatedAt, ...other } = user._doc;
       res.status(200).json({...other, exist: true});
     } catch (err) {
-      return res.status(500).json({ msg: "Không tồn tại!", exist: false });
+      return res.status(200).json({ msg: "Không tồn tại!", exist: false });
     }
   },
   getListUserByContact: async (req, res) => {
@@ -150,7 +150,7 @@ const userCrl = {
 
       res.status(200).json(await getUser());
     } catch (err) {
-      return res.status(500).json({ msg: "Không tồn tại!" });
+      return res.status(200).json({ msg: "Không tồn tại!" });
     }
   },
   
@@ -395,11 +395,9 @@ const userCrl = {
   },
   editInfo: async (req, res) => {
     try {
-      const { newUsername, newProfilePicture, newGender, newCoverPhoto } = req.body;
+      const { newUsername, newProfilePicture, newGender, newCoverPhoto, newAddress } = req.body;
 
       const u = await User.findById(req.params.id);
-      console.log(u.profilePicture);
-
       const user = await User.findByIdAndUpdate(
         req.params.id,
         {
@@ -409,7 +407,8 @@ const userCrl = {
               ? newProfilePicture
               : u.profilePicture,
             gender: newGender, 
-            coverPicture: newCoverPhoto
+            coverPicture: newCoverPhoto,
+            address: newAddress
           },
         },
         { new: true }
@@ -422,14 +421,11 @@ const userCrl = {
   //
   deafUser: expressAsyncHandler(async(req, res)=> {
     try {
-      const newUser= await User.findOneAndUpdate(
-        req.body.id_user,
+      await User.updateOne(
+        {_id: req.body.id_user},
         {
-          $set: {
-            isDeaf: req.body.deaf,
-          },
-        },
-        { new: true }
+          isDeaf: req.body.deaf,
+        }
       );
       res.status(200).json({ msg: "Update infor user success"});
     } catch (error) {

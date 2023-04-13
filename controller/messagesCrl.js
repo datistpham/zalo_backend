@@ -18,11 +18,11 @@ class APIfeatures {
 }
 const messagesCrl = {
    postMessage: async (req, res) => {
-       const {sender, conversation, message, roomId, type_message, key, name_file} = req.body
+       const {sender, conversation, message, roomId, type_message, key, name_file, extend_text} = req.body
         if(!conversation || !sender) return
         
         try {
-            var newMessage = new Message(({conversation :conversation, sender:sender, key: key, message:message, roomId: roomId, type_message: type_message, name_file: name_file}))
+            const newMessage = new Message(({conversation :conversation, sender:sender, key: key, message:message, roomId: roomId, type_message: type_message, name_file: name_file, extend_text: extend_text || ""}))
             const savedMessage = await newMessage.save()
             
             res.status(200).json(savedMessage)
@@ -49,7 +49,7 @@ const messagesCrl = {
         }
     },
     recallMessage: async (req, res)=> {
-        try {
+        try {   
             const recall= await Message.findOneAndUpdate({key: req.params.keyId}, {type_message: "text", message: req.body.message})
             res.status(200).json({
                 data: recall

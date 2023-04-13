@@ -171,6 +171,7 @@ const authCtrl = {
     try {
       const email =req.body.email
       const emailUser= await User.findOne({email: email})
+      await Confirm.deleteMany({email: email})
       const code_verify= Math.floor(Math.random() * 900000 + 100000)
       const newConfirm = await Confirm({id_user: emailUser?._id || "", code_verify, email: email})
       await newConfirm.save();

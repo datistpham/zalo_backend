@@ -47,7 +47,7 @@ const conversationsCrl = {
       const conversation= await Conversation.findOne({
         id_conversation: (req.params.idConversation)
       })
-      .populate("member", "username profilePicture phoneNumber")
+      .populate("member", "username profilePicture phoneNumber gender coverPicture address")
       
       return res.status(200).json(conversation)
     }catch (error) {

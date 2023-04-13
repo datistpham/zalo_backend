@@ -53,17 +53,17 @@ const SocketServer = (socket, io) => {
   // recall message
   socket.on("recall_message", (data) => {
     io.to(data.idConversation).emit("recall_message_server", {
+      ...data,
       type: "text",
       message: "Tin nhắn đã được thu hồi",
-      ...data,
     });
   });
   //
   socket.on("remove_message", (data) => {
     io.to(data.idConversation).emit("remove_message_server", {
+      ...data,
       type: "text",
       message: "Tin nhắn đã xóa",
-      ...data,
     });
   });
   // call signal
@@ -111,7 +111,14 @@ const SocketServer = (socket, io) => {
     io.emit("newest_message", {...data})
     socket.broadcast.emit("newest_message_sound", {...data})
   })
-  
+  // join self
+  socket.on("join_room_self", (data)=> {
+    socket.join(data?.meId || "")
+  })
+
+  socket.on("update_profile_user", (data)=> {
+    io.in(data?.meId).emit("update_profile_user_on", {data: data?.meId})
+  })
 };
 
 module.exports = SocketServer;
