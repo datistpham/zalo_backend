@@ -34,10 +34,15 @@ const SocketServer = (socket, io) => {
     socket.emit("connect_room_conversation", { roomId: data.roomId });
   });
 
-  socket.on("message_from_client", (data) => {
-    io.in(data.roomId).emit("broadcast_to_all_user_in_room", { ...data });
+  socket.on("message_from_client", async (data) => {
+    await io.in(data.roomId).emit("broadcast_to_all_user_in_room", { ...data })
+    if(data?.type_message === "text_to_voice") {
+      socket.broadcast.to(data?.roomId).emit("auto_playing_audio", {voice: data?.message, roomId: data?.roomId, keyId: data?.key});
+    }
   });
-  
+  socket.on("send_message_key_id", (data)=> {
+    io.in(data?.roomId).emit("auto_playing_audio", {voice: data?.message, roomId: data?.roomId, keyId: data?.key, sender: data?.sender});
+  })
   socket.on("typing_from_client_on", (data) => {
     socket
       .broadcast

@@ -16,6 +16,10 @@ const MessageSchema = new mongoose.Schema(
         extend_text: {
             type: String,
             default: ""
+        },
+        autoplaying: {
+            type: Number, 
+            default: 1
         }
             
     },
