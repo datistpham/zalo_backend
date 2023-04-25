@@ -102,7 +102,6 @@ const userCrl = {
       const admin = await User.findById({ _id: req.body.userId });
 
       const user = await User.findById(req.params.id);
-      // console.log("aaaaaaaaaa", user._doc.status);
       if (admin._doc.isAdmin) {
         const userUpdate = await User.findByIdAndUpdate(
           req.params.id,
@@ -461,6 +460,27 @@ const userCrl = {
       else {
         res.status(200).json({msg: "", request: false, duplicate: false})
       }
+  }),
+
+  update_password: expressAsyncHandler(async (req, res)=> {
+    const user= await User.findById({_id: req.user.id})
+    if(!user) {
+      return res.status(401).json({message: "Chưa đăng nhập"})
+    }
+    else {
+      const validPassword = await bcrypt.compare(
+        req.body.old_password,
+        user.password
+      );
+      if(!validPassword) {
+          return res.status(401).json({message: "Mật khẩu sai"})
+      }
+      else {
+        const newPassword= await bcrypt.hash(req.body.new_password, saltRounds)
+        const updateUser= await User.findByIdAndUpdate({_id: req.user.id}, {password: newPassword})
+        return res.status(200).json({message: "Cập nhật mật khẩu thành công"})
+      }
+    }
   })
 };
 module.exports = userCrl;

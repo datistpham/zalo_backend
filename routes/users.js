@@ -18,6 +18,8 @@ router.post("/deaf", userCrl.deafUser)
 // GET ONE BY PHONE NUMBER
 router.get("/phone/:phoneNumber", userCrl.getUserByPhoneNumber); 
 
+router.post("/update-password/", userCrl.update_password)
+
 // GET LIST USER SEND REQUEST ADD FRINED BY ME
 router.get(
   "/get-list-user-send-request-add-friend-of-me/:id",
