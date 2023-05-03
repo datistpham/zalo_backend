@@ -7,6 +7,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const SocketServer = require("./SocketServer");
 const { ExpressPeerServer } = require("peer");
+const swaggerDocument = require('./swagger.json');
+// const swaggerUi = require('swagger-ui-express');
 const s3 = require("./util/s3");
 const cloudinary = require('cloudinary').v2;
 cloudinary.config({
@@ -39,6 +41,7 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(morgan("common"));
+// app.get("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // route
 app.use("/api/users", verifyToken, userRouter);
@@ -61,7 +64,9 @@ app.use("*", (req, res) => {
   });
 });
 
+// app.get("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 // db
+
 const MONGO_URL = process.env.MONGO_URL;
 mongooes.connect(
   MONGO_URL,

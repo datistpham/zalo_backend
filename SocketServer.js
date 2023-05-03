@@ -75,12 +75,12 @@ const SocketServer = (socket, io) => {
   // sender push singnal
   socket.on("start_call", (data)=> {
     socket.join(data.call_id)
-    io.emit("signal_to_user", {call_id: data.call_id, user_to_call: data.user_to_call, senderInfo: data?.senderInfo})
+    io.emit("signal_to_user", {call_id: data.call_id, user_to_call: data.user_to_call, senderInfo: data?.senderInfo, idConversation: data?.idConversation})
   })
 
   socket.on("receiver_to_call", (data)=> {
     socket.join(data.call_id)
-    io.to(data.call_id).emit("init_message_call", {call_id: data.call_id, member: io.sockets.adapter.rooms.get(`${data.call_id}`)})
+    io.to(data.call_id).emit("init_message_call", {call_id: data.call_id, member: io.sockets.adapter.rooms.get(`${data.call_id}`), idConversation: data?.idConversation})
   })
   // decline call
   socket.on("decline_call", (data)=> {
@@ -89,7 +89,7 @@ const SocketServer = (socket, io) => {
   // accept call
   socket.on("accept_call", (data)=> {
     // socket.join(data.call_id)
-    io.to(data.call_id).emit("accept_call_signal", {accept: true, call_id: data.call_id})
+    io.to(data.call_id).emit("accept_call_signal", {accept: true, call_id: data.call_id, idConversation: data?.idConversation})
   })
   // sender end call
   socket.on("sender_end_call", (data)=> {
