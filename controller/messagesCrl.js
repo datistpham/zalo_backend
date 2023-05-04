@@ -1,6 +1,7 @@
 const expressAsyncHandler = require("express-async-handler");
 const Conversation = require("../models/Conversation");
 const Message = require("../models/Message");
+const moment= require("moment")
 
 class APIfeatures {
     constructor(query, queryString){
@@ -22,7 +23,7 @@ const messagesCrl = {
         if(!conversation || !sender) return
         
         try {
-            const newMessage = new Message(({conversation :conversation, sender:sender, key: key, message:message, roomId: roomId, type_message: type_message, name_file: name_file, extend_text: extend_text || ""}))
+            const newMessage = new Message(({conversation :conversation, sender:sender, key: key, message:message, roomId: roomId, type_message: type_message, name_file: name_file, extend_text: extend_text || "", time_created: moment(new Date()).format("DD/MM/YYYY")}))
             const savedMessage = await newMessage.save()
             
             res.status(200).json(savedMessage)

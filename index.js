@@ -27,6 +27,7 @@ const userRouter = require("./routes/users");
 const conversationRouter = require("./routes/conversations");
 const messageRouter = require("./routes/messages");
 const callRouter= require("./routes/call")
+const adminRouter= require("./routes/admin")
 const router = require("./routes/auth");
 const upload= require("./routes/upload")
 const app = express();
@@ -49,6 +50,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/conversations", conversationRouter);
 app.use("/api/messages", verifyToken, messageRouter);
 app.use("/api/live", verifyToken, callRouter)
+app.use("/api/admin", adminRouter)
 app.use(upload)
 app.use("/user", router)
 app.use("/api/s3Url", async (req, res) => {

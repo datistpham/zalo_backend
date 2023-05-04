@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const moment= require("moment")
 
 const MessageSchema = new mongoose.Schema(
     {
@@ -20,6 +21,10 @@ const MessageSchema = new mongoose.Schema(
         autoplaying: {
             type: Number, 
             default: 1
+        },
+        time_created: {
+            type: String,
+            default: moment(new Date()).format("DD/MM/YYYY")
         }
             
     },
